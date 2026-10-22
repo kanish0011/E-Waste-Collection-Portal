@@ -1,0 +1,203 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E-Waste Collection and Recycling Portal</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f1f5f9;
+  color: #1e293b;
+}
+header {
+  background: #14532d;
+  color: white;
+  padding: 25px;
+  text-align: center;
+}
+header p { margin-bottom: 0; }
+main { max-width: 1150px; margin: auto; padding: 20px; }
+h2 { color: #166534; }
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 15px;
+}
+.card, .panel {
+  background: white;
+  padding: 18px;
+  border-radius: 10px;
+  box-shadow: 0 2px 7px #00000010;
+}
+.card strong { font-size: 30px; display: block; margin-top: 10px; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+th { background: #dcfce7; }
+.table-wrap { overflow-x: auto; }
+.status {
+  padding: 5px 9px;
+  border-radius: 15px;
+  background: #dcfce7;
+  color: #166534;
+  display: inline-block;
+  font-size: 12px;
+  font-weight: bold;
+}
+select, button {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #cbd5e1;
+}
+button { background: #166534; color: white; cursor: pointer; }
+footer { text-align: center; padding: 20px; color: #64748b; }
+@media(max-width:600px) {
+  header { padding: 16px; }
+  main { padding: 12px; }
+  th, td { padding: 8px; font-size: 13px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>E-Waste Collection & Recycling Portal</h1>
+  <p>Responsible disposal today for a greener tomorrow</p>
+</header>
+
+<main>
+  <section>
+    <h2>Processing Status Dashboard</h2>
+    <div class="cards">
+      <div class="card">Items Collected<strong id="collected">0</strong></div>
+      <div class="card">Awaiting Processing<strong id="awaiting">0</strong></div>
+      <div class="card">Under Recycling<strong id="recycling">0</strong></div>
+      <div class="card">Successfully Recycled<strong id="recycled">0</strong></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Collection Centres</h2>
+    <div class="panel">
+      <label for="category">Filter by device category: </label>
+      <select id="category" onchange="renderCentres()">
+        <option value="All">All Categories</option>
+        <option>Mobile Phones</option>
+        <option>Laptops</option>
+        <option>Batteries</option>
+        <option>Televisions</option>
+      </select>
+    </div>
+    <br>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Centre</th><th>Location</th><th>Accepted Devices</th>
+            <th>Schedule</th><th>Recycling Instructions</th>
+            <th>Processing Status</th>
+          </tr>
+        </thead>
+        <tbody id="centreRows"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Collection Schedule Updates</h2>
+    <div class="panel">
+      <p><strong>Administrator notice:</strong> Review the following sample schedules before visiting.</p>
+      <ul>
+        <li>Green Earth Centre — Monday to Saturday, 9 AM–5 PM.</li>
+        <li>City Recycling Hub — Monday to Friday, 10 AM–6 PM.</li>
+        <li>EcoTech Centre — Tuesday to Sunday, 9 AM–4 PM.</li>
+        <li>Community E-Waste Point — Wednesday and Saturday, 10 AM–3 PM.</li>
+        <li>Smart Recycling Centre — Monday to Saturday, 8 AM–5 PM.</li>
+      </ul>
+      <p>These are demonstration records. Confirm actual schedules with the centre before visiting.</p>
+    </div>
+  </section>
+</main>
+
+<footer>Smart E-Waste Management | DevOps Assessment 10 | Set V</footer>
+
+<script>
+const centres = [
+  {
+    name:"Green Earth Centre", location:"Vellore",
+    devices:["Mobile Phones","Laptops"],
+    schedule:"Mon-Sat, 9 AM-5 PM",
+    instructions:"Remove personal data and hand over devices safely.",
+    status:"Collected"
+  },
+  {
+    name:"City Recycling Hub", location:"Chennai",
+    devices:["Batteries","Televisions"],
+    schedule:"Mon-Fri, 10 AM-6 PM",
+    instructions:"Do not dismantle batteries or damaged electronics.",
+    status:"Awaiting Processing"
+  },
+  {
+    name:"EcoTech Centre", location:"Katpadi",
+    devices:["Laptops","Mobile Phones"],
+    schedule:"Tue-Sun, 9 AM-4 PM",
+    instructions:"Back up data and remove SIM and memory cards.",
+    status:"Under Recycling"
+  },
+  {
+    name:"Community E-Waste Point", location:"Ranipet",
+    devices:["Batteries","Mobile Phones"],
+    schedule:"Wed-Sat, 10 AM-3 PM",
+    instructions:"Keep batteries separate and avoid short-circuiting terminals.",
+    status:"Successfully Recycled"
+  },
+  {
+    name:"Smart Recycling Centre", location:"Arcot",
+    devices:["Televisions","Laptops","Batteries"],
+    schedule:"Mon-Sat, 8 AM-5 PM",
+    instructions:"Keep equipment intact and use an authorized recycler.",
+    status:"Awaiting Processing"
+  }
+];
+
+function renderCentres() {
+  const selected = document.getElementById("category").value;
+  const filtered = centres.filter(c =>
+    selected === "All" || c.devices.includes(selected)
+  );
+
+  document.getElementById("centreRows").innerHTML = filtered.map(c => `
+    <tr>
+      <td>${c.name}</td>
+      <td>${c.location}</td>
+      <td>${c.devices.join(", ")}</td>
+      <td>${c.schedule}</td>
+      <td>${c.instructions}</td>
+      <td><span class="status">${c.status}</span></td>
+    </tr>
+  `).join("");
+
+  document.getElementById("collected").textContent =
+    centres.filter(c => c.status === "Collected").length;
+  document.getElementById("awaiting").textContent =
+    centres.filter(c => c.status === "Awaiting Processing").length;
+  document.getElementById("recycling").textContent =
+    centres.filter(c => c.status === "Under Recycling").length;
+  document.getElementById("recycled").textContent =
+    centres.filter(c => c.status === "Successfully Recycled").length;
+}
+
+renderCentres();
+</script>
+</body>
+</html>
